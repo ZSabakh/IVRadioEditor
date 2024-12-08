@@ -2,11 +2,12 @@ import json
 import subprocess
 import os
 import sys
+from utils import resource_path
 
 
 def update_song_length(gtaiv_dir, radio, song, new_length):
     """Update song length in the specified .dat15 file."""
-    ivam_path = os.path.join(os.path.dirname(__file__), "ivam.exe")
+    ivam_path = resource_path("ivam.exe")
     dat15_file = os.path.join(gtaiv_dir, "pc", "audio", "config", "sounds.dat15")
     dat15_dir = os.path.dirname(dat15_file)
     json_file = "sounds.dat15.json"
@@ -19,6 +20,7 @@ def update_song_length(gtaiv_dir, radio, song, new_length):
     original_cwd = os.getcwd()
     os.chdir(dat15_dir)
     try:
+        print(f"Using ivam.exe from: {ivam_path}")
         subprocess.run([ivam_path, "sounds.dat15"], check=True)
 
         if not os.path.exists(json_file):

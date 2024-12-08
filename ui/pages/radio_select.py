@@ -5,6 +5,7 @@ from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QPixmap, QIcon
 
 from ui.styles import TOOL_BUTTON_STYLE, SCROLL_AREA_STYLE, BUTTON_STYLE
+from utils import resource_path
 
 
 class RadioSelectPage(QWidget):
@@ -75,7 +76,7 @@ class RadioSelectPage(QWidget):
 
         for index, radio_file in enumerate(self.radio_files):
             radio_name = radio_file[:-4]
-            icon_path = os.path.join('assets', 'radio', f"{radio_name}.png")
+            icon_path = resource_path(os.path.join('assets', 'radio', f"{radio_name}.png"))
 
             button = QToolButton(self)
             button.setText(radio_name.replace('radio_', '').upper())

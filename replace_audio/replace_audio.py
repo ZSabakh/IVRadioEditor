@@ -3,6 +3,7 @@ import subprocess
 import os
 import sys
 from pydub import AudioSegment
+from utils import resource_path
 
 
 def process_audio(track_name, new_audio_file):
@@ -60,7 +61,7 @@ def modify_oaf_file(oaf_file, track_name, new_audio_duration):
 
 def convert_back_to_special_audio(track_name):
     """Convert .oaf and .wav files back into a single special audio file."""
-    iv_audio_conv_path = os.path.join(os.path.dirname(__file__), "IVAudioConv.exe")
+    iv_audio_conv_path = resource_path("IVAudioConv.exe")
 
     oaf_file = f"{track_name}.oaf"
     wav_file = f"{track_name}.wav"
@@ -83,7 +84,7 @@ def convert_back_to_special_audio(track_name):
 
 def replace_special_audio(original_audio, new_audio_file):
     """Main function to replace special audio file with custom audio."""
-    iv_audio_conv_path = os.path.join(os.path.dirname(__file__), "IVAudioConv.exe")
+    iv_audio_conv_path = resource_path("IVAudioConv.exe")
 
     print(f"Extracting .oaf and .wav from {original_audio}...")
     subprocess.run([iv_audio_conv_path, original_audio], check=True)
