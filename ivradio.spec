@@ -1,4 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
+from PyInstaller.utils.hooks import collect_data_files
+
+pyrpfiv_datas = collect_data_files('pyrpfiv')
 
 block_cipher = None
 
@@ -9,19 +12,19 @@ a = Analysis(
     datas=[
         ('assets/radio/*.png', 'assets/radio'),
         ('assets/fonts/*.ttf', 'assets/fonts'),
-        ('pyrpfiv/hashes.ini', 'pyrpfiv'),
         ('replace_audio/IVAudioConv.exe', '.'),
         ('replace_audio/bass.dll', '.'),
         ('replace_audio/bassenc.dll', '.'),
         ('replace_audio/bassmix.dll', '.'),
         ('update_length/ivam.exe', '.'),
-    ],
+    ] + pyrpfiv_datas,  
     hiddenimports=[
         'PySide6.QtCore',
         'PySide6.QtGui',
         'PySide6.QtWidgets',
         'qt_material',
         'pydub',
+        'pyrpfiv',
     ],
     hookspath=[],
     hooksconfig={},
@@ -53,7 +56,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,
+    console=False, 
     disable_windowed_traceback=False,
     target_arch=None,
     codesign_identity=None,

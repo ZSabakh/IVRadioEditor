@@ -16,14 +16,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Create conda environment
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          activate-environment: ivradio
-          python-version: "3.12"
-
       - name: Install dependencies
-        shell: bash -el {0}
         run: |
           python -m pip install --upgrade pip
           pip install "pyrpfiv>=0.1.2"
@@ -31,19 +24,16 @@ jobs:
           pip install pyinstaller
 
       - name: List installed packages
-        shell: bash -el {0}
         run: |
           pip list
 
       - name: Build executable
-        shell: bash -el {0}
         run: |
           pyinstaller --clean ivradio.spec
 
       - name: Verify executable
-        shell: bash -el {0}
         run: |
-          ls -l dist/
+          dir dist
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
