@@ -4,6 +4,9 @@ on:
   release:
     types: [created]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -36,14 +39,11 @@ jobs:
           dir dist
 
       - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./dist/IVRadioEditor.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./dist/IVRadioEditor.exe
-          asset_name: IVRadioEditor.exe
-          asset_content_type: application/octet-stream
 
       - name: Upload build logs on failure
         if: failure()
