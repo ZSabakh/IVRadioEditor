@@ -8,6 +8,7 @@ from ui.pages.replace import ReplacePage
 from ui.pages.progress import ProgressPage
 from replace_audio.replace_audio import replace_special_audio
 from update_length.update_song_length import update_song_length
+from utils import install_ffmpeg, check_ffmpeg
 from pyrpfiv import RPFParser
 import os
 import shutil
@@ -94,6 +95,30 @@ class GTAIVEditor(QMainWindow):
         self.stack.addWidget(self.progress_page)
         self.stack.setCurrentWidget(self.intro_page)
 
+    def start_replace(self, new_song_path):
+        self.new_song_path = new_song_path
+
+        if not check_ffmpeg():
+            if not install_ffmpeg(self):
+                QMessageBox.critical(
+                    self,
+                    "Error",
+                    "FFmpeg is required for audio processing. The operation cannot continue without it.",
+                    QMessageBox.Ok
+                )
+                return
+
+        self.worker = ReplaceSongWorker(
+            self.gtaiv_path, self.selected_radio, self.selected_song, self.new_song_path
+        )
+
+        self.worker.progress.connect(self.update_progress)
+        self.worker.finished.connect(self.on_replace_finished)
+        self.worker.error.connect(self.on_replace_error)
+
+        self.worker.start()
+        self.stack.setCurrentWidget(self.progress_page)
+
     def goto_radio_select(self, gtaiv_path):
         self.gtaiv_path = gtaiv_path
         self.radio_select_page = RadioSelectPage(
@@ -133,20 +158,6 @@ class GTAIVEditor(QMainWindow):
 
     def goto_song_select_back(self):
         self.stack.setCurrentWidget(self.song_select_page)
-
-    def start_replace(self, new_song_path):
-        self.new_song_path = new_song_path
-
-        self.worker = ReplaceSongWorker(
-            self.gtaiv_path, self.selected_radio, self.selected_song, self.new_song_path
-        )
-
-        self.worker.progress.connect(self.update_progress)
-        self.worker.finished.connect(self.on_replace_finished)
-        self.worker.error.connect(self.on_replace_error)
-
-        self.worker.start()
-        self.stack.setCurrentWidget(self.progress_page)
 
     def update_progress(self, value):
         self.progress_page.update_progress(value)

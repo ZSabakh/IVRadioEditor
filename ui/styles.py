@@ -97,3 +97,53 @@ PROGRESS_BAR_STYLE = """
         border-radius: 2px;
     }
 """
+
+MESSAGE_BOX_STYLE = """
+    QMessageBox {
+        background-color: #1E1E1E;
+    }
+    QMessageBox QLabel {
+        color: white;
+        font-size: 12px;
+        background-color: transparent;
+    }
+    QMessageBox QPushButton {
+        background-color: #FFC107;
+        color: #000000;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+        font-weight: bold;
+        min-width: 80px;
+    }
+    QMessageBox QPushButton:hover {
+        background-color: #FFD54F;
+    }
+    QMessageBox QPushButton:pressed {
+        background-color: #FFA000;
+    }
+"""
+
+PROGRESS_DIALOG_STYLE = """
+    QProgressDialog {
+        background-color: #1E1E1E;
+    }
+    QProgressDialog QLabel {
+        color: white;
+        font-size: 12px;
+        padding: 8px;
+        background-color: transparent;
+    }
+    QProgressDialog QProgressBar {
+        background-color: #2A2A2A;
+        border: 2px solid #424242;
+        border-radius: 4px;
+        color: black;
+        text-align: center;
+        height: 20px;
+    }
+    QProgressDialog QProgressBar::chunk {
+        background-color: #FFC107;
+        border-radius: 2px;
+    }
+"""

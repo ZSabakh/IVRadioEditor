@@ -3,22 +3,29 @@ import subprocess
 import os
 import sys
 from pydub import AudioSegment
-from utils import resource_path
+from utils import resource_path, check_ffmpeg
 
 
 def process_audio(track_name, new_audio_file):
     """Process audio to generate a game-compatible WAV file."""
     output_wav = f"{track_name}.wav"
 
-    audio = AudioSegment.from_file(new_audio_file)
+    try:
+        if not check_ffmpeg():
+            raise RuntimeError("FFmpeg is not installed. Audio processing cannot continue.")
 
-    processed_audio = audio  # + silence
+        audio = AudioSegment.from_file(new_audio_file)
+        processed_audio = audio  # + silence
 
-    print(f"Generating WAV for {track_name}...")
-    processed_audio.export(output_wav, format="wav", parameters=["-ar", "32000", "-ac", "2"])
+        print(f"Generating WAV for {track_name}...")
+        processed_audio.export(output_wav, format="wav", parameters=["-ar", "32000", "-ac", "2"])
 
-    print(f"WAV file generated: {output_wav}")
-    return output_wav
+        print(f"WAV file generated: {output_wav}")
+        return output_wav
+    except Exception as e:
+        if "Couldn't find ffmpeg" in str(e) or "ffprobe" in str(e):
+            raise RuntimeError("FFmpeg is required for audio processing. Please install FFmpeg to continue.") from e
+        raise
 
 
 def modify_oaf_file(oaf_file, track_name, new_audio_duration):
@@ -84,25 +91,34 @@ def convert_back_to_special_audio(track_name):
 
 def replace_special_audio(original_audio, new_audio_file):
     """Main function to replace special audio file with custom audio."""
-    iv_audio_conv_path = resource_path("IVAudioConv.exe")
+    try:
+        iv_audio_conv_path = resource_path("IVAudioConv.exe")
 
-    print(f"Extracting .oaf and .wav from {original_audio}...")
-    subprocess.run([iv_audio_conv_path, original_audio], check=True)
-    oaf_file = f"{original_audio}.oaf"
-    wav_file = f"{original_audio}.wav"
+        print(f"Extracting .oaf and .wav from {original_audio}...")
+        subprocess.run([iv_audio_conv_path, original_audio], check=True)
+        oaf_file = f"{original_audio}.oaf"
+        wav_file = f"{original_audio}.wav"
 
-    new_wav = process_audio(original_audio, new_audio_file)
+        new_wav = process_audio(original_audio, new_audio_file)
 
-    new_audio_duration = int(AudioSegment.from_file(new_audio_file).duration_seconds * 1000)
+        if not check_ffmpeg():
+            raise RuntimeError("FFmpeg is required for audio processing. Please install FFmpeg to continue.")
 
-    updated_oaf = modify_oaf_file(oaf_file, original_audio, new_audio_duration)
+        new_audio_duration = int(AudioSegment.from_file(new_audio_file).duration_seconds * 1000)
 
-    os.replace(new_wav, wav_file)
-    print(f"Replaced {wav_file} with updated audio.")
+        updated_oaf = modify_oaf_file(oaf_file, original_audio, new_audio_duration)
 
-    special_audio_file = convert_back_to_special_audio(original_audio)
+        os.replace(new_wav, wav_file)
+        print(f"Replaced {wav_file} with updated audio.")
 
-    print(f"Replacement complete! New file: {special_audio_file}")
+        special_audio_file = convert_back_to_special_audio(original_audio)
+
+        print(f"Replacement complete! New file: {special_audio_file}")
+
+    except Exception as e:
+        if "Couldn't find ffmpeg" in str(e) or "ffprobe" in str(e):
+            raise RuntimeError("FFmpeg is required for audio processing. Please install FFmpeg to continue.") from e
+        raise
 
 
 if __name__ == "__main__":

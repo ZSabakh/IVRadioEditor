@@ -1,7 +1,16 @@
 import sys
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from ui.main_window import GTAIVEditor
 from qt_material import apply_stylesheet
+from utils import check_ffmpeg, install_ffmpeg
+
+
+class SplashWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("GTA IV Radio Editor")
+        self.setFixedSize(400, 200)
+        self.setStyleSheet("background-color: #121212;")
 
 
 def main():
@@ -28,8 +37,16 @@ def main():
 
     apply_stylesheet(app, theme='dark_cyan.xml', extra=extra)
 
+    splash = SplashWindow()
+    splash.show()
+
+    if not check_ffmpeg():
+        if not install_ffmpeg(splash):
+            sys.exit(1)
+
     editor = GTAIVEditor()
     editor.show()
+    splash.close()
     sys.exit(app.exec())
 
 
