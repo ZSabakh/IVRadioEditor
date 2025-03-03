@@ -10,7 +10,7 @@ A desktop application that allows you to customize the radio experience in Grand
 ## ⚠️ Important Notes
 
 - **Game Version Compatibility**:
-  - This tool is compatible with GTA IV version 1.0.8.0. If you own a legitimate copy of another version, you may temporarily use a backup of the 1.0.8.0 executable in your game directory for compatibility purposes. Users must own a legitimate copy of the game to use this tool.
+  - This tool is compatible with GTA IV version 1.0.8.0, 1.2.0.43, or 1.2.0.59. If you own a legitimate copy of another version, you may temporarily use a backup of the working version's executable in your game directory for compatibility purposes. Users must own a legitimate copy of the game to use this tool.
   - Not tested with Episodes from Liberty City (EFLC) - likely won't work
 - **File Modifications**: This tool modifies:
   - Radio .rpf files in `\pc\audio\sfx`
@@ -70,7 +70,7 @@ The application provides a simple workflow:
 
 ## Requirements
 
-- Grand Theft Auto IV (version 1.0.8.0)
+- Grand Theft Auto IV (version 1.0.8.0, 1.2.0.43, or 1.2.0.59)
 - Python 3.6 or higher
 - Required Python packages (see dependencies)
 - pyrpfiv library (upcoming release)
@@ -139,7 +139,7 @@ If you are the copyright holder and have concerns about this use, please contact
 
 - Always backup your game files before making modifications
 - Ensure you have proper permissions to modify game files
-- Compatible only with GTA IV version 1.0.8.0
+- Compatible only with GTA IV version 1.0.8.0, 1.2.0.43, or 1.2.0.59
 - The pyrpfiv library is required but currently unreleased - stay tuned for its PyPI release
 
 ## License
